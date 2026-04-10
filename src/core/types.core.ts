@@ -3,6 +3,7 @@ export interface Service {
     strip_prefix: boolean;
     auth_required?: boolean;
     timeout_ms?: number;
+    rate_limit?: number; 
 }
 
 export interface ServerConfig {
@@ -13,7 +14,14 @@ export interface ServerConfig {
     key_path?: string;
 }
 
+export interface BaseConfig {
+    logging: boolean;
+    default_rate_limit: boolean;
+    custom_rate_limit: boolean; // Fixed typo from 'custome'
+}
+
 export interface SentryGateConfig {
+    base: BaseConfig; // Added this to the root config
     server: ServerConfig;
     services: Record<string, Service>;
 }

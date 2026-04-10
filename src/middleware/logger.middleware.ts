@@ -14,17 +14,15 @@ export class SentryLogger {
       duration: `${duration}ms`,
     };
 
-    // Console output for live monitoring
+    // 1. Console visibility
     const color = status >= 400 ? "❌" : "✅";
     console.log(`${color} [${timestamp}] ${method} ${path} (${duration}ms)`);
 
+    // 2. Persistent Logging
     try {
       const line = JSON.stringify(logEntry) + "\n";
+      await Bun.write(this.logPath as any, line, { append: true } as any);
       
-      // We wrap the path in Bun.file() to satisfy the type requirement
-      const targetFile = Bun.file(this.logPath);
-      
-      await Bun.write(targetFile, line, { append: true });
     } catch (err) {
       console.error("🛡️ SentryGate Logger Error:", err);
     }
