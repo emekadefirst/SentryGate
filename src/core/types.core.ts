@@ -17,7 +17,7 @@ export interface ServerConfig {
 export interface BaseConfig {
     logging: boolean;
     default_rate_limit: boolean;
-    custom_rate_limit: boolean; // Fixed typo from 'custome'
+    custom_rate_limit: boolean; 
 }
 
 export interface SentryGateConfig {

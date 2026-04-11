@@ -1,4 +1,3 @@
-import { parse } from "@iarna/toml";
 import type { SentryGateConfig } from "../core/types.core";
 import { join } from "node:path";
 
@@ -16,8 +15,12 @@ export async function loadSentryConfig(): Promise<SentryGateConfig> {
 
     try {
         const content = await file.text();
-        return parse(content) as unknown as SentryGateConfig;
+        return Bun.TOML.parse(content) as unknown as SentryGateConfig;
     } catch (err: any) {
         throw new Error(`🛡️ SentryGate: Failed to parse TOML: ${err.message}`);
     }
 }
+
+import config from './bunfig.toml'
+
+
