@@ -1,12 +1,28 @@
+# Maps to BaseConfig interface
 [base]
 logging = true
 default_rate_limit = true
 custom_rate_limit = false
 
+# Maps to ServerConfig interface
 [server]
-port = 3000
-name = "Lagos-Main"
+port = 80  # Public port for the gateway
+name = "SentryGate-Lagos-Instance"
+ssl_enabled = false
+# cert_path = "/path/to/cert" # Optional
+# key_path = "/path/to/key"   # Optional
 
-[services.products]
-target = "http://localhost:3001"
+# Maps to Record<string, Service> interface
+# We use "root" so you can visit localhost/users directly
+[services.root]
+target = "http://localhost:8000"
+strip_prefix = false
+auth_required = false # Set to true to test the SentryAuth shield
+timeout_ms = 5000
+rate_limit = 60
+
+# Optional: Adding a second service prefix to demonstrate the Record structure
+[services.api]
+target = "http://localhost:8000"
 strip_prefix = true
+auth_required = true

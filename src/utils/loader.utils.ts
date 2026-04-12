@@ -21,6 +21,6 @@ export async function loadSentryConfig(): Promise<SentryGateConfig> {
     }
 }
 
-import config from './bunfig.toml'
+
 
 
