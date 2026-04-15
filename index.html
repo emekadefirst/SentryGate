@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SentryGate — Open-Source API Gateway</title>
+<link rel="icon" type="image/svg+xml" href="./public/assets/sentrygate.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --mint: #00f0a0;
+    --mint-dim: #00c07e;
+    --mint-glow: rgba(0,240,160,0.08);
+    --mint-border: rgba(0,240,160,0.18);
+    --bg: #0b0c0b;
+    --bg-card: #0f100f;
+    --bg-code: #0d0e0d;
+    --text: #d6e8d6;
+    --text-muted: #5a7060;
+    --text-dim: #3a4e3a;
+    --border: rgba(255,255,255,0.055);
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* scanline texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* faint grid */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,240,160,0.022) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,240,160,0.022) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 0 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 5rem;
+  }
+
+  .nav-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--mint);
+    background: var(--mint-glow);
+    border: 1px solid var(--mint-border);
+    padding: 4px 10px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--mint); }
+
+  /* ── HERO ── */
+  .hero {
+    margin-bottom: 6rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-logo {
+    display: block;
+    width: 260px;
+    margin-bottom: 2.5rem;
+    opacity: 0.92;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--mint);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--mint);
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--mint);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 span {
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    color: var(--text-muted);
+    max-width: 560px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 11px 24px;
+    border-radius: 3px;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--mint);
+    color: #050a06;
+  }
+
+  .btn-primary:hover {
+    background: #00ffaa;
+    box-shadow: 0 0 24px rgba(0,240,160,0.25);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--mint);
+    border: 1px solid var(--mint-border);
+  }
+
+  .btn-secondary:hover {
+    background: var(--mint-glow);
+    border-color: var(--mint);
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section { margin-bottom: 5rem; }
+
+  /* ── PILLARS GRID ── */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .pillar {
+    background: var(--bg-card);
+    padding: 1.6rem 1.8rem;
+    transition: background 0.2s;
+  }
+
+  .pillar:hover { background: var(--mint-glow); }
+
+  .pillar-icon {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--mint);
+    margin-bottom: 0.7rem;
+    text-transform: uppercase;
+  }
+
+  .pillar h3 {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .pillar p {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── DOWNLOAD TABLE ── */
+  .dl-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .dl-table thead th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 12px 20px;
+    background: var(--bg-code);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dl-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .dl-table tbody tr:last-child { border-bottom: none; }
+  .dl-table tbody tr:hover { background: var(--mint-glow); }
+
+  .dl-table td {
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  .dl-table td:first-child { color: var(--text); }
+
+  .dl-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--mint);
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .dl-link:hover { opacity: 0.75; }
+
+  .dl-link svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 2.5rem; }
+
+  .step {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 1.2rem;
+    align-items: start;
+  }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mint);
+    background: var(--mint-glow);
+    border: 1px solid var(--mint-border);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-body h3 {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+  }
+
+  .step-body p {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  /* ── OS TABS ── */
+  .tabs { margin-bottom: 0.8rem; display: flex; gap: 0; }
+
+  .tab-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    background: var(--bg-code);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .tab-btn:first-child { border-radius: 3px 0 0 3px; border-right: none; }
+  .tab-btn:last-child { border-radius: 0 3px 3px 0; }
+
+  .tab-btn.active {
+    background: var(--mint-glow);
+    color: var(--mint);
+    border-color: var(--mint-border);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── CODE BLOCKS ── */
+  .code-block {
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .code-block-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-lang {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .copy-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .copy-btn:hover { color: var(--mint); }
+
+  pre {
+    padding: 1.2rem 1.4rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--text);
+    display: block;
+  }
+
+  .c-mint { color: var(--mint); }
+  .c-comment { color: var(--text-dim); }
+  .c-key { color: #7ec8a0; }
+  .c-val { color: #aedfc0; }
+  .c-str { color: var(--mint); }
+  .c-prompt { color: var(--mint); user-select: none; }
+
+  /* ── STRUCTURE ── */
+  .tree {
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 2;
+    color: var(--text-muted);
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.4rem 1.6rem;
+  }
+
+  .tree-dir { color: var(--text); }
+  .tree-comment { color: var(--text-dim); font-size: 12px; }
+
+  /* ── STATUS CHIP ── */
+  .status-endpoint {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 20px;
+    margin-top: 0.5rem;
+    color: var(--text);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--mint);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 2.5rem;
+    margin-top: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  footer a {
+    color: var(--mint);
+    text-decoration: none;
+  }
+
+  footer a:hover { text-decoration: underline; }
+
+  /* ── ANIM ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  section { animation: fadeUp 0.6s ease both; }
+  section:nth-child(2) { animation-delay: 0.1s; }
+  section:nth-child(3) { animation-delay: 0.15s; }
+  section:nth-child(4) { animation-delay: 0.2s; }
+  section:nth-child(5) { animation-delay: 0.25s; }
+  section:nth-child(6) { animation-delay: 0.3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .pillars { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; }
+    nav { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+
+  /* ── DIVIDER ── */
+  .rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  /* numbered list in windows steps */
+  .steps-list {
+    padding-left: 1.2rem;
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 2;
+  }
+
+  .steps-list li { margin-bottom: 0.2rem; }
+
+  strong { color: var(--text); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <span class="nav-badge">v0.1 · Pilot</span>
+    <ul class="nav-links">
+      <li><a href="#install">Install</a></li>
+      <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#source">Source</a></li>
+      <li><a href="https://github.com/emekadefirst/SentryGate">GitHub ↗</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="./public/assets/sentrygatelogo.png" alt="SentryGate" class="hero-logo"/>
+    <p class="hero-eyebrow">Open-Source API Gateway</p>
+    <h1>Sentry<span>Gate</span></h1>
+    <p class="hero-desc">
+      A high-performance, minimalist API gateway built on Bun. It acts as a secure front door for your microservices — handling routing, authentication, and rate-limiting — configured entirely through a single <code style="display:inline;font-size:13px;color:var(--mint);background:var(--mint-glow);padding:1px 6px;border-radius:2px;">.toml</code> file.
+    </p>
+    <div class="hero-actions">
+      <a href="#install" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download 
+      </a>
+      <a href="https://github.com/emekadefirst/SentryGate" class="btn btn-secondary">View Source</a>
+      <a href="https://github.com/sponsors/emekadefirst" class="btn btn-secondary">Sponsor</a>
+    </div>
+  </div>
+
+  <!-- PILLARS -->
+  <section>
+    <p class="section-label">Core principles</p>
+    <h2>Built around four pillars</h2>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">01 · Performance</div>
+        <h3>Near-zero latency</h3>
+        <p>Bun's ultra-fast runtime and native Fetch API keep your gateway out of the critical path.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">02 · Security</div>
+        <h3>Auth shielding</h3>
+        <p>Built-in authentication, header masking, and configurable rate limiting at the edge.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">03 · Scale</div>
+        <h3>Stateless by design</h3>
+        <p>Handles thousands of concurrent requests without session state or coordination overhead.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">04 · Simplicity</div>
+        <h3>One config file</h3>
+        <p>Your entire routing and auth infrastructure lives in a single <code style="display:inline;font-size:12px;color:var(--mint)">.toml</code> file.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="install">
+    <p class="section-label">Distribution</p>
+    <h2>Pre-compiled binaries</h2>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:1.5rem;">No Bun or Node.js installation required. Download the standalone executable for your OS.</p>
+    <table class="dl-table">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Architecture</th>
+          <th>Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Windows</td>
+          <td><span style="color:var(--text-muted)">x64</span></td>
+          <td>
+            <a href="https://github.com/emekadefirst/SentryGate/releases/download/Pilot/sentrygate.exe" class="dl-link">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              sentrygate.exe
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>Linux / macOS</td>
+          <td><span style="color:var(--text-muted)">x64 / arm64</span></td>
+          <td>
+            <a href="https://github.com/emekadefirst/SentryGate/releases/download/Pilot/sentrygate" class="dl-link">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              sentrygate
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- QUICK START -->
+  <section id="quickstart">
+    <p class="section-label">Setup</p>
+    <h2>Quick start</h2>
+    <div class="steps">
+
+      <!-- Step 1 -->
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>Install the command</h3>
+          <p>Run SentryGate globally like <code style="display:inline;font-size:12px;color:var(--mint)">nginx</code>. Choose your platform:</p>
+
+          <div class="tabs" id="os-tabs">
+            <button class="tab-btn active" onclick="switchTab('linux')">Linux / macOS</button>
+            <button class="tab-btn" onclick="switchTab('windows')">Windows</button>
+          </div>
+
+          <div class="tab-panel active" id="tab-linux">
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-lang">bash</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code><span class="c-comment"># Move binary to your PATH</span>
+<span class="c-prompt">$</span> sudo mv ~/Downloads/sentrygate /usr/local/bin/sentry
+
+<span class="c-comment"># Make it executable</span>
+<span class="c-prompt">$</span> sudo chmod +x /usr/local/bin/sentry
+
+<span class="c-comment"># Start the gate</span>
+<span class="c-prompt">$</span> sentry start</code></pre>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tab-windows">
+            <ol class="steps-list">
+              <li>Rename the downloaded <strong>sentrygate.exe</strong> to <strong>sentry.exe</strong></li>
+              <li>Add its folder to <strong>System Environment Variables → Path</strong></li>
+              <li>Open a new terminal and run:</li>
+            </ol>
+            <div class="code-block" style="margin-top:1rem;">
+              <div class="code-block-header">
+                <span class="code-lang">powershell</span>
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+              </div>
+              <pre><code><span class="c-prompt">PS&gt;</span> sentry start</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>Configure your gate</h3>
+          <p>Create <code style="display:inline;font-size:12px;color:var(--mint)">sentrygate.toml</code> in your project root:</p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <span class="code-lang">toml</span>
+              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            </div>
+            <pre><code><span class="c-comment"># Maps to BaseConfig interface</span>
+[<span class="c-key">base</span>]
+<span class="c-key">logging</span>            = <span class="c-str">true</span>
+<span class="c-key">default_rate_limit</span> = <span class="c-str">true</span>
+<span class="c-key">custom_rate_limit</span>  = <span class="c-str">false</span>
+
+<span class="c-comment"># Maps to ServerConfig interface</span>
+[<span class="c-key">server</span>]
+<span class="c-key">port</span>        = <span class="c-val">80</span>
+<span class="c-key">name</span>        = <span class="c-str">"SentryGate-Lagos-Instance"</span>
+<span class="c-key">ssl_enabled</span> = <span class="c-str">false</span>
+<span class="c-comment"># cert_path = "/path/to/cert"</span>
+<span class="c-comment"># key_path  = "/path/to/key"</span>
+
+<span class="c-comment"># "root" → requests hit /users directly</span>
+[<span class="c-key">services.root</span>]
+<span class="c-key">target</span>        = <span class="c-str">"http://localhost:8000"</span>
+<span class="c-key">strip_prefix</span>  = <span class="c-str">false</span>
+<span class="c-key">auth_required</span> = <span class="c-str">false</span>   <span class="c-comment"># set true for SentryAuth shield</span>
+<span class="c-key">timeout_ms</span>    = <span class="c-val">5000</span>
+<span class="c-key">rate_limit</span>    = <span class="c-val">60</span>
+
+<span class="c-comment"># Second service — demonstrates the Record structure</span>
+[<span class="c-key">services.api</span>]
+<span class="c-key">target</span>        = <span class="c-str">"http://localhost:8000"</span>
+<span class="c-key">strip_prefix</span>  = <span class="c-str">true</span>
+<span class="c-key">auth_required</span> = <span class="c-str">true</span></code></pre>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BUILD FROM SOURCE -->
+  <section id="source">
+    <p class="section-label">Development</p>
+    <h2>Build from source</h2>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:1.5rem;">Prefer compiling the TypeScript source yourself? Bun required.</p>
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><code><span class="c-comment"># Install dependencies</span>
+<span class="c-prompt">$</span> bun install
+
+<span class="c-comment"># Development mode</span>
+<span class="c-prompt">$</span> bun run src/index.ts
+
+<span class="c-comment"># Compile your own binary</span>
+<span class="c-prompt">$</span> bun build ./src/index.ts --compile --outfile sentrygate</code></pre>
+    </div>
+  </section>
+
+  <!-- MONITORING -->
+  <section>
+    <p class="section-label">Observability</p>
+    <h2>Monitoring</h2>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:1rem;">SentryGate ships with a built-in health check and status reporter. Access it at:</p>
+    <div class="status-endpoint">
+      <div class="status-dot"></div>
+      http://localhost/sentry-status
+    </div>
+  </section>
+
+  <!-- PROJECT STRUCTURE -->
+  <section>
+    <p class="section-label">Codebase</p>
+    <h2>Project structure</h2>
+    <div class="tree">
+      <div><span class="tree-dir">src/</span></div>
+      <div>├── <span class="tree-dir">core/</span>        <span class="tree-comment">— Engine and routing</span></div>
+      <div>├── <span class="tree-dir">middleware/</span>  <span class="tree-comment">— Auth, rate limiting, logging</span></div>
+      <div>└── <span class="tree-dir">utils/</span>       <span class="tree-comment">— Config loader, header masking</span></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>MIT License · <a href="https://github.com/emekadefirst/SentryGate">github.com/emekadefirst/SentryGate</a></p>
+    <p>© 2026 Victor Chibuogwu Chukwuemeka</p>
+  </footer>
+
+</div>
+
+<script>
+  function switchTab(os) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + os).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText.replace(/^\$ |^PS> /gm, '').replace(/^\$/gm, '').trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied';
+      setTimeout(() => btn.textContent = 'Copy', 1800);
+    });
+  }
+</script>
+</body>
+</html>

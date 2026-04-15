@@ -1,0 +1,29 @@
+
+[base]
+logging = true
+default_rate_limit = true
+custom_rate_limit = false
+
+
+[server]
+port = 443
+name = "SentryGate-Lagos-Instance"
+ssl_enabled = true
+cert_path = "/etc/letsencrypt/live/emekadefirst.com/fullchain.pem"
+key_path = "/etc/letsencrypt/live/emekadefirst.com/privkey.pem"
+
+
+[services.root]
+target = "http://localhost:8001"
+strip_prefix = false
+auth_required = false # Set to true to test the SentryAuth shield
+timeout_ms = 5000
+rate_limit = 60
+
+
+[services.chat]
+target = "http://localhost:3000"
+strip_prefix = true
+auth_required = true
+wss_required = true
+ws_required = true

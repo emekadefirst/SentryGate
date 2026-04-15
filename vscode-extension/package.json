@@ -1,0 +1,44 @@
+{
+  "name": "sentrygate",
+  "displayName": "SentryGate Gateway",
+  "description": "File icon and language support for SentryGate configuration files (sentrygate.toml)",
+  "version": "1.0.0",
+  "publisher": "VictorChibuogwuChukwuemeka",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emekadefirst/SentryGate"
+  },
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "sentrygate",
+        "aliases": [
+          "SentryGate Config"
+        ],
+        "filenames": [
+          "sentrygate.toml"
+        ],
+        "icon": {
+          "light": "./icons/sentrygate.svg",
+          "dark": "./icons/sentrygate.svg"
+        },
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "sentrygate",
+        "scopeName": "source.toml",
+        "path": "./syntaxes/toml.tmLanguage.json"
+      }
+    ]
+  }
+}

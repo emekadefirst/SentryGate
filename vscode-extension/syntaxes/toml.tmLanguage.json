@@ -1,0 +1,82 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "TOML",
+  "scopeName": "source.toml",
+  "patterns": [
+    { "include": "#comment" },
+    { "include": "#table" },
+    { "include": "#key-value" }
+  ],
+  "repository": {
+    "comment": {
+      "match": "#.*$",
+      "name": "comment.line.number-sign.toml"
+    },
+    "table": {
+      "patterns": [
+        {
+          "match": "^\\s*(\\[\\[)([^\\]]+)(\\]\\])",
+          "captures": {
+            "1": { "name": "punctuation.definition.table.array.toml" },
+            "2": { "name": "entity.name.section.toml" },
+            "3": { "name": "punctuation.definition.table.array.toml" }
+          },
+          "name": "meta.section.toml"
+        },
+        {
+          "match": "^\\s*(\\[)([^\\]]+)(\\])",
+          "captures": {
+            "1": { "name": "punctuation.definition.table.toml" },
+            "2": { "name": "entity.name.section.toml" },
+            "3": { "name": "punctuation.definition.table.toml" }
+          },
+          "name": "meta.section.toml"
+        }
+      ]
+    },
+    "key-value": {
+      "match": "^\\s*([a-zA-Z0-9_.-]+)\\s*(=)\\s*(.*)",
+      "captures": {
+        "1": { "name": "variable.other.key.toml" },
+        "2": { "name": "keyword.operator.assignment.toml" },
+        "3": { "patterns": [{ "include": "#value" }] }
+      }
+    },
+    "value": {
+      "patterns": [
+        { "include": "#string-multiline" },
+        { "include": "#string" },
+        { "include": "#string-literal" },
+        { "include": "#boolean" },
+        { "include": "#number" },
+        { "include": "#datetime" },
+        { "include": "#comment" }
+      ]
+    },
+    "string-multiline": {
+      "begin": "\"\"\"",
+      "end": "\"\"\"",
+      "name": "string.quoted.triple.toml"
+    },
+    "string": {
+      "match": "\"([^\"]*)\"",
+      "name": "string.quoted.double.toml"
+    },
+    "string-literal": {
+      "match": "'([^']*)'",
+      "name": "string.quoted.single.toml"
+    },
+    "boolean": {
+      "match": "\\b(true|false)\\b",
+      "name": "constant.language.boolean.toml"
+    },
+    "number": {
+      "match": "\\b[+-]?\\d[\\d_]*(\\.[\\d_]+)?([eE][+-]?\\d+)?\\b",
+      "name": "constant.numeric.toml"
+    },
+    "datetime": {
+      "match": "\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2}",
+      "name": "constant.other.datetime.toml"
+    }
+  }
+}
