@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,10 +23,12 @@
     --border: rgba(255,255,255,0.055);
     --mono: 'IBM Plex Mono', monospace;
     --sans: 'IBM Plex Sans', sans-serif;
+    --warn: rgba(255,180,0,0.12);
+    --warn-border: rgba(255,180,0,0.25);
+    --warn-text: #ffb400;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -40,30 +41,20 @@
     overflow-x: hidden;
   }
 
-  /* scanline texture */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.08) 2px,
-      rgba(0,0,0,0.08) 4px
-    );
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
     pointer-events: none;
     z-index: 999;
   }
 
-  /* faint grid */
   body::after {
     content: '';
     position: fixed;
     inset: 0;
-    background-image:
-      linear-gradient(rgba(0,240,160,0.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,240,160,0.022) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(0,240,160,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,160,0.022) 1px, transparent 1px);
     background-size: 60px 60px;
     pointer-events: none;
     z-index: 0;
@@ -77,7 +68,7 @@
     padding: 0 2rem 6rem;
   }
 
-  /* ── NAV ── */
+  /* NAV */
   nav {
     display: flex;
     align-items: center;
@@ -100,11 +91,7 @@
     text-transform: uppercase;
   }
 
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; flex-wrap: wrap; }
 
   .nav-links a {
     font-family: var(--mono);
@@ -118,18 +105,10 @@
 
   .nav-links a:hover { color: var(--mint); }
 
-  /* ── HERO ── */
-  .hero {
-    margin-bottom: 6rem;
-    animation: fadeUp 0.8s ease both;
-  }
+  /* HERO */
+  .hero { margin-bottom: 6rem; animation: fadeUp 0.8s ease both; }
 
-  .hero-logo {
-    display: block;
-    width: 260px;
-    margin-bottom: 2.5rem;
-    opacity: 0.92;
-  }
+  .hero-logo { display: block; width: 260px; margin-bottom: 2.5rem; opacity: 0.92; }
 
   .hero-eyebrow {
     font-family: var(--mono);
@@ -143,13 +122,7 @@
     gap: 10px;
   }
 
-  .hero-eyebrow::before {
-    content: '';
-    display: inline-block;
-    width: 28px;
-    height: 1px;
-    background: var(--mint);
-  }
+  .hero-eyebrow::before { content: ''; display: inline-block; width: 28px; height: 1px; background: var(--mint); }
 
   h1 {
     font-family: var(--mono);
@@ -161,10 +134,7 @@
     margin-bottom: 1.5rem;
   }
 
-  h1 span {
-    color: var(--text);
-    font-weight: 300;
-  }
+  h1 span { color: var(--text); font-weight: 300; }
 
   .hero-desc {
     font-size: 16px;
@@ -174,11 +144,7 @@
     margin-bottom: 2.5rem;
   }
 
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
   .btn {
     font-family: var(--mono);
@@ -195,28 +161,12 @@
     gap: 8px;
   }
 
-  .btn-primary {
-    background: var(--mint);
-    color: #050a06;
-  }
+  .btn-primary { background: var(--mint); color: #050a06; }
+  .btn-primary:hover { background: #00ffaa; box-shadow: 0 0 24px rgba(0,240,160,0.25); }
+  .btn-secondary { background: transparent; color: var(--mint); border: 1px solid var(--mint-border); }
+  .btn-secondary:hover { background: var(--mint-glow); border-color: var(--mint); }
 
-  .btn-primary:hover {
-    background: #00ffaa;
-    box-shadow: 0 0 24px rgba(0,240,160,0.25);
-  }
-
-  .btn-secondary {
-    background: transparent;
-    color: var(--mint);
-    border: 1px solid var(--mint-border);
-  }
-
-  .btn-secondary:hover {
-    background: var(--mint-glow);
-    border-color: var(--mint);
-  }
-
-  /* ── SECTION HEADER ── */
+  /* SECTION */
   .section-label {
     font-family: var(--mono);
     font-size: 10px;
@@ -236,305 +186,158 @@
     border-bottom: 1px solid var(--border);
   }
 
-  section { margin-bottom: 5rem; }
-
-  /* ── PILLARS GRID ── */
-  .pillars {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .pillar {
-    background: var(--bg-card);
-    padding: 1.6rem 1.8rem;
-    transition: background 0.2s;
-  }
-
-  .pillar:hover { background: var(--mint-glow); }
-
-  .pillar-icon {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--mint);
-    margin-bottom: 0.7rem;
-    text-transform: uppercase;
-  }
-
-  .pillar h3 {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 0.4rem;
-  }
-
-  .pillar p {
-    font-size: 13.5px;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-
-  /* ── DOWNLOAD TABLE ── */
-  .dl-table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-
-  .dl-table thead th {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    text-align: left;
-    padding: 12px 20px;
-    background: var(--bg-code);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .dl-table tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
-
-  .dl-table tbody tr:last-child { border-bottom: none; }
-  .dl-table tbody tr:hover { background: var(--mint-glow); }
-
-  .dl-table td {
-    padding: 16px 20px;
+  h3.sub {
     font-family: var(--mono);
     font-size: 13px;
+    font-weight: 500;
+    color: var(--mint);
+    margin: 1.8rem 0 0.8rem;
+    letter-spacing: 0.05em;
   }
 
+  section { margin-bottom: 5rem; }
+
+  /* PILLARS */
+  .pillars { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+
+  .pillar { background: var(--bg-card); padding: 1.6rem 1.8rem; transition: background 0.2s; }
+  .pillar:hover { background: var(--mint-glow); }
+
+  .pillar-icon { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--mint); margin-bottom: 0.7rem; text-transform: uppercase; }
+
+  .pillar h3 { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 0.4rem; }
+  .pillar p { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; }
+
+  /* DOWNLOAD TABLE */
+  .dl-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .dl-table thead th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); text-align: left; padding: 12px 20px; background: var(--bg-code); border-bottom: 1px solid var(--border); }
+  .dl-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .dl-table tbody tr:last-child { border-bottom: none; }
+  .dl-table tbody tr:hover { background: var(--mint-glow); }
+  .dl-table td { padding: 16px 20px; font-family: var(--mono); font-size: 13px; }
   .dl-table td:first-child { color: var(--text); }
 
-  .dl-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--mint);
-    text-decoration: none;
-    transition: opacity 0.15s;
-  }
-
+  .dl-link { display: inline-flex; align-items: center; gap: 7px; color: var(--mint); text-decoration: none; transition: opacity 0.15s; }
   .dl-link:hover { opacity: 0.75; }
-
   .dl-link svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-  /* ── STEPS ── */
+  .badge-os {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .badge-linux { background: rgba(0,240,160,0.1); color: var(--mint); border: 1px solid var(--mint-border); }
+  .badge-mac   { background: rgba(180,180,255,0.08); color: #a0a8ff; border: 1px solid rgba(160,168,255,0.2); }
+  .badge-win   { background: rgba(0,160,255,0.08); color: #60c0ff; border: 1px solid rgba(0,160,255,0.2); }
+
+  /* STEPS */
   .steps { display: flex; flex-direction: column; gap: 2.5rem; }
 
-  .step {
-    display: grid;
-    grid-template-columns: 36px 1fr;
-    gap: 1.2rem;
-    align-items: start;
-  }
+  .step { display: grid; grid-template-columns: 36px 1fr; gap: 1.2rem; align-items: start; }
 
   .step-num {
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--mint);
-    background: var(--mint-glow);
-    border: 1px solid var(--mint-border);
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 3px;
-    flex-shrink: 0;
-    margin-top: 2px;
+    font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--mint);
+    background: var(--mint-glow); border: 1px solid var(--mint-border);
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    border-radius: 3px; flex-shrink: 0; margin-top: 2px;
   }
 
-  .step-body h3 {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 0.6rem;
-  }
+  .step-body h3 { font-family: var(--mono); font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 0.6rem; }
+  .step-body p { font-size: 14px; color: var(--text-muted); margin-bottom: 1rem; }
 
-  .step-body p {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-  }
-
-  /* ── OS TABS ── */
-  .tabs { margin-bottom: 0.8rem; display: flex; gap: 0; }
+  /* TABS */
+  .tabs { margin-bottom: 0.8rem; display: flex; gap: 0; flex-wrap: wrap; }
 
   .tab-btn {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 7px 16px;
-    background: var(--bg-code);
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    cursor: pointer;
-    transition: all 0.15s;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 7px 16px; background: var(--bg-code); color: var(--text-muted);
+    border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
   }
 
   .tab-btn:first-child { border-radius: 3px 0 0 3px; border-right: none; }
   .tab-btn:last-child { border-radius: 0 3px 3px 0; }
+  .tab-btn:not(:first-child):not(:last-child) { border-right: none; }
 
-  .tab-btn.active {
-    background: var(--mint-glow);
-    color: var(--mint);
-    border-color: var(--mint-border);
-  }
+  .tab-btn.active { background: var(--mint-glow); color: var(--mint); border-color: var(--mint-border); }
 
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
-  /* ── CODE BLOCKS ── */
-  .code-block {
-    background: var(--bg-code);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-  }
+  /* CODE BLOCKS */
+  .code-block { background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1rem; }
 
-  .code-block-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 14px;
-    border-bottom: 1px solid var(--border);
-  }
+  .code-block-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid var(--border); }
 
-  .code-lang {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-  }
+  .code-lang { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
 
-  .copy-btn {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 2px;
-    transition: all 0.15s;
-  }
-
+  .copy-btn { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 2px 6px; border-radius: 2px; transition: all 0.15s; }
   .copy-btn:hover { color: var(--mint); }
 
-  pre {
-    padding: 1.2rem 1.4rem;
-    overflow-x: auto;
-    margin: 0;
-  }
+  pre { padding: 1.2rem 1.4rem; overflow-x: auto; margin: 0; }
 
-  code {
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.75;
-    color: var(--text);
-    display: block;
-  }
+  code { font-family: var(--mono); font-size: 13px; line-height: 1.75; color: var(--text); display: block; }
 
-  .c-mint { color: var(--mint); }
   .c-comment { color: var(--text-dim); }
   .c-key { color: #7ec8a0; }
   .c-val { color: #aedfc0; }
   .c-str { color: var(--mint); }
   .c-prompt { color: var(--mint); user-select: none; }
+  .c-kw { color: #a0d8b0; }
 
-  /* ── STRUCTURE ── */
-  .tree {
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 2;
-    color: var(--text-muted);
-    background: var(--bg-code);
-    border: 1px solid var(--border);
+  /* CALLOUT */
+  .callout {
+    border: 1px solid var(--mint-border);
+    background: var(--mint-glow);
     border-radius: 4px;
-    padding: 1.4rem 1.6rem;
+    padding: 1rem 1.2rem;
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin-bottom: 1.2rem;
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
   }
 
+  .callout-warn {
+    border-color: var(--warn-border);
+    background: var(--warn);
+    color: #a08040;
+  }
+
+  .callout-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  /* TREE */
+  .tree { font-family: var(--mono); font-size: 13px; line-height: 2; color: var(--text-muted); background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 1.4rem 1.6rem; }
   .tree-dir { color: var(--text); }
   .tree-comment { color: var(--text-dim); font-size: 12px; }
 
-  /* ── STATUS CHIP ── */
-  .status-endpoint {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--mono);
-    font-size: 13px;
-    background: var(--bg-code);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 14px 20px;
-    margin-top: 0.5rem;
-    color: var(--text);
-  }
+  /* STATUS */
+  .status-endpoint { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 13px; background: var(--bg-code); border: 1px solid var(--border); border-radius: 4px; padding: 14px 20px; margin-top: 0.5rem; color: var(--text); }
 
-  .status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--mint);
-    animation: pulse 2s infinite;
-  }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); animation: pulse 2s infinite; }
 
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding-top: 2.5rem;
-    margin-top: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
+  /* SUPPORT GRID */
+  .support-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 1.5rem; }
 
-  footer p {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-dim);
-  }
+  .support-item { background: var(--bg-card); padding: 1.2rem 1.4rem; }
+  .support-item:hover { background: var(--mint-glow); }
+  .support-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem; }
+  .support-value { font-family: var(--mono); font-size: 13px; color: var(--text); }
+  .support-yes { color: var(--mint); }
+  .support-no { color: #ff6060; }
 
-  footer a {
-    color: var(--mint);
-    text-decoration: none;
-  }
-
+  /* FOOTER */
+  footer { border-top: 1px solid var(--border); padding-top: 2.5rem; margin-top: 5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+  footer p { font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+  footer a { color: var(--mint); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
-  /* ── ANIM ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
   section { animation: fadeUp 0.6s ease both; }
   section:nth-child(2) { animation-delay: 0.1s; }
@@ -542,32 +345,24 @@
   section:nth-child(4) { animation-delay: 0.2s; }
   section:nth-child(5) { animation-delay: 0.25s; }
   section:nth-child(6) { animation-delay: 0.3s; }
+  section:nth-child(7) { animation-delay: 0.35s; }
+  section:nth-child(8) { animation-delay: 0.4s; }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .pillars { grid-template-columns: 1fr; }
-    h1 { font-size: 2rem; }
-    nav { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  }
+  .rule { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
 
-  /* ── DIVIDER ── */
-  .rule {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0;
-  }
-
-  /* numbered list in windows steps */
-  .steps-list {
-    padding-left: 1.2rem;
-    color: var(--text-muted);
-    font-size: 14px;
-    line-height: 2;
-  }
-
+  .steps-list { padding-left: 1.2rem; color: var(--text-muted); font-size: 14px; line-height: 2; }
   .steps-list li { margin-bottom: 0.2rem; }
 
   strong { color: var(--text); font-weight: 500; }
+
+  p.body { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 1rem; }
+
+  @media (max-width: 600px) {
+    .pillars { grid-template-columns: 1fr; }
+    .support-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; }
+    nav { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
 </style>
 </head>
 <body>
@@ -578,6 +373,10 @@
     <ul class="nav-links">
       <li><a href="#install">Install</a></li>
       <li><a href="#quickstart">Quick Start</a></li>
+      <li><a href="#websocket">WebSocket</a></li>
+      <li><a href="#ssl">SSL</a></li>
+      <li><a href="#examples">Examples</a></li>
+      <li><a href="#background">Background</a></li>
       <li><a href="#source">Source</a></li>
       <li><a href="https://github.com/emekadefirst/SentryGate">GitHub ↗</a></li>
     </ul>
@@ -589,12 +388,12 @@
     <p class="hero-eyebrow">Open-Source API Gateway</p>
     <h1>Sentry<span>Gate</span></h1>
     <p class="hero-desc">
-      A high-performance, minimalist API gateway built on Bun. It acts as a secure front door for your microservices — handling routing, authentication, and rate-limiting — configured entirely through a single <code style="display:inline;font-size:13px;color:var(--mint);background:var(--mint-glow);padding:1px 6px;border-radius:2px;">.toml</code> file.
+      A high-performance, minimalist API gateway built on Bun. It acts as a secure front door for your microservices — handling routing, authentication, rate-limiting, and WebSocket proxying — configured entirely through a single <code style="display:inline;font-size:13px;color:var(--mint);background:var(--mint-glow);padding:1px 6px;border-radius:2px;">.toml</code> file.
     </p>
     <div class="hero-actions">
       <a href="#install" class="btn btn-primary">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Download 
+        Download
       </a>
       <a href="https://github.com/emekadefirst/SentryGate" class="btn btn-secondary">View Source</a>
       <a href="https://github.com/sponsors/emekadefirst" class="btn btn-secondary">Sponsor</a>
@@ -629,23 +428,76 @@
     </div>
   </section>
 
+  <!-- WHAT IT SUPPORTS -->
+  <section>
+    <p class="section-label">Capabilities</p>
+    <h2>What SentryGate supports</h2>
+    <div class="support-grid">
+      <div class="support-item">
+        <div class="support-label">HTTP Proxying</div>
+        <div class="support-value support-yes">✓ Supported</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">WebSocket (ws://)</div>
+        <div class="support-value support-yes">✓ Supported</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">Secure WebSocket (wss://)</div>
+        <div class="support-value support-yes">✓ Supported</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">TLS / SSL</div>
+        <div class="support-value support-yes">✓ Native via Bun</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">Rate Limiting</div>
+        <div class="support-value support-yes">✓ Token Bucket</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">Bearer Auth</div>
+        <div class="support-value support-yes">✓ Per-service</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">Header Shielding</div>
+        <div class="support-value support-yes">✓ Auto</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">Structured Logging</div>
+        <div class="support-value support-yes">✓ JSON + file</div>
+      </div>
+      <div class="support-item">
+        <div class="support-label">Shared state (multi-instance)</div>
+        <div class="support-value support-no">✗ Single process</div>
+      </div>
+    </div>
+    <p class="body">SentryGate is designed as a <strong>single-binary, single-process</strong> gateway. Rate limiting state lives in-memory per process. For multi-instance deployments requiring shared rate limit state, an external coordinator like Redis is needed.</p>
+  </section>
+
   <!-- DOWNLOAD -->
   <section id="install">
     <p class="section-label">Distribution</p>
     <h2>Pre-compiled binaries</h2>
-    <p style="color:var(--text-muted);font-size:14px;margin-bottom:1.5rem;">No Bun or Node.js installation required. Download the standalone executable for your OS.</p>
+    <p class="body">No Bun or Node.js installation required. Download the standalone executable for your OS. Each binary is compiled specifically for its target platform.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <span>The original <code style="display:inline;font-size:12px;color:var(--warn-text)">sentrygate</code> binary in early releases was compiled on macOS (Mach-O format) and will not run on Linux servers despite the filename suggesting otherwise. Always use the platform-specific binary below.</span>
+    </div>
+
     <table class="dl-table">
       <thead>
         <tr>
           <th>Platform</th>
           <th>Architecture</th>
+          <th>Format</th>
           <th>Download</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Windows</td>
+          <td><span class="badge-win">Windows</span></td>
           <td><span style="color:var(--text-muted)">x64</span></td>
+          <td><span style="color:var(--text-muted);font-size:12px;">PE32+ executable</span></td>
           <td>
             <a href="https://github.com/emekadefirst/SentryGate/releases/download/Pilot/sentrygate.exe" class="dl-link">
               <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -654,8 +506,20 @@
           </td>
         </tr>
         <tr>
-          <td>Linux / macOS</td>
-          <td><span style="color:var(--text-muted)">x64 / arm64</span></td>
+          <td><span class="badge-linux">Linux</span></td>
+          <td><span style="color:var(--text-muted)">x64</span></td>
+          <td><span style="color:var(--text-muted);font-size:12px;">ELF 64-bit</span></td>
+          <td>
+            <a href="https://github.com/emekadefirst/SentryGate/releases/download/Pilot/sentrygateLinux" class="dl-link">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              sentrygateLinux
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td><span class="badge-mac">macOS</span></td>
+          <td><span style="color:var(--text-muted)">x64</span></td>
+          <td><span style="color:var(--text-muted);font-size:12px;">Mach-O 64-bit</span></td>
           <td>
             <a href="https://github.com/emekadefirst/SentryGate/releases/download/Pilot/sentrygate" class="dl-link">
               <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -678,42 +542,58 @@
         <div class="step-num">01</div>
         <div class="step-body">
           <h3>Install the command</h3>
-          <p>Run SentryGate globally like <code style="display:inline;font-size:12px;color:var(--mint)">nginx</code>. Choose your platform:</p>
+          <p>Download and install the binary for your platform. Make sure to use the correct binary for your OS.</p>
 
           <div class="tabs" id="os-tabs">
-            <button class="tab-btn active" onclick="switchTab('linux')">Linux / macOS</button>
-            <button class="tab-btn" onclick="switchTab('windows')">Windows</button>
+            <button class="tab-btn active" onclick="switchTab('linux', this, 'os-tabs')">Linux</button>
+            <button class="tab-btn" onclick="switchTab('macos', this, 'os-tabs')">macOS</button>
+            <button class="tab-btn" onclick="switchTab('windows', this, 'os-tabs')">Windows</button>
           </div>
 
           <div class="tab-panel active" id="tab-linux">
             <div class="code-block">
-              <div class="code-block-header">
-                <span class="code-lang">bash</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code><span class="c-comment"># Move binary to your PATH</span>
-<span class="c-prompt">$</span> sudo mv ~/Downloads/sentrygate /usr/local/bin/sentry
+              <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="c-comment"># Download the Linux binary</span>
+<span class="c-prompt">$</span> curl -L https://github.com/emekadefirst/SentryGate/releases/download/Pilot/sentrygateLinux -o sentrygate
+
+<span class="c-comment"># Make it executable BEFORE moving</span>
+<span class="c-prompt">$</span> chmod +x sentrygate
+
+<span class="c-comment"># Move to PATH</span>
+<span class="c-prompt">$</span> sudo mv sentrygate /usr/local/bin/sentrygate
+
+<span class="c-comment"># Verify</span>
+<span class="c-prompt">$</span> sentrygate start</code></pre>
+            </div>
+          </div>
+
+          <div class="tab-panel" id="tab-macos">
+            <div class="code-block">
+              <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="c-comment"># Download the macOS binary</span>
+<span class="c-prompt">$</span> curl -L https://github.com/emekadefirst/SentryGate/releases/download/Pilot/sentrygate -o sentrygate
 
 <span class="c-comment"># Make it executable</span>
-<span class="c-prompt">$</span> sudo chmod +x /usr/local/bin/sentry
+<span class="c-prompt">$</span> chmod +x sentrygate
 
-<span class="c-comment"># Start the gate</span>
-<span class="c-prompt">$</span> sentry start</code></pre>
+<span class="c-comment"># Move to PATH</span>
+<span class="c-prompt">$</span> sudo mv sentrygate /usr/local/bin/sentrygate
+
+<span class="c-comment"># Verify</span>
+<span class="c-prompt">$</span> sentrygate start</code></pre>
             </div>
           </div>
 
           <div class="tab-panel" id="tab-windows">
             <ol class="steps-list">
-              <li>Rename the downloaded <strong>sentrygate.exe</strong> to <strong>sentry.exe</strong></li>
-              <li>Add its folder to <strong>System Environment Variables → Path</strong></li>
+              <li>Download <strong>sentrygate.exe</strong> from the table above</li>
+              <li>Move it to a folder of your choice (e.g. <code style="display:inline;font-size:12px;color:var(--mint)">C:\tools\</code>)</li>
+              <li>Add that folder to <strong>System Environment Variables → Path</strong></li>
               <li>Open a new terminal and run:</li>
             </ol>
             <div class="code-block" style="margin-top:1rem;">
-              <div class="code-block-header">
-                <span class="code-lang">powershell</span>
-                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-              </div>
-              <pre><code><span class="c-prompt">PS&gt;</span> sentry start</code></pre>
+              <div class="code-block-header"><span class="code-lang">powershell</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+              <pre><code><span class="c-prompt">PS&gt;</span> sentrygate start</code></pre>
             </div>
           </div>
         </div>
@@ -724,39 +604,47 @@
         <div class="step-num">02</div>
         <div class="step-body">
           <h3>Configure your gate</h3>
-          <p>Create <code style="display:inline;font-size:12px;color:var(--mint)">sentrygate.toml</code> in your project root:</p>
+          <p>Create <code style="display:inline;font-size:12px;color:var(--mint)">sentrygate.toml</code> in the directory where you run SentryGate. All service targets should use <code style="display:inline;font-size:12px;color:var(--mint)">localhost</code> when running on the same machine as your services.</p>
           <div class="code-block">
-            <div class="code-block-header">
-              <span class="code-lang">toml</span>
-              <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-            </div>
-            <pre><code><span class="c-comment"># Maps to BaseConfig interface</span>
-[<span class="c-key">base</span>]
+            <div class="code-block-header"><span class="code-lang">toml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code>[<span class="c-key">base</span>]
 <span class="c-key">logging</span>            = <span class="c-str">true</span>
 <span class="c-key">default_rate_limit</span> = <span class="c-str">true</span>
 <span class="c-key">custom_rate_limit</span>  = <span class="c-str">false</span>
 
-<span class="c-comment"># Maps to ServerConfig interface</span>
 [<span class="c-key">server</span>]
 <span class="c-key">port</span>        = <span class="c-val">80</span>
-<span class="c-key">name</span>        = <span class="c-str">"SentryGate-Lagos-Instance"</span>
+<span class="c-key">name</span>        = <span class="c-str">"my-gateway"</span>
 <span class="c-key">ssl_enabled</span> = <span class="c-str">false</span>
-<span class="c-comment"># cert_path = "/path/to/cert"</span>
-<span class="c-comment"># key_path  = "/path/to/key"</span>
 
-<span class="c-comment"># "root" → requests hit /users directly</span>
-[<span class="c-key">services.root</span>]
-<span class="c-key">target</span>        = <span class="c-str">"http://localhost:8000"</span>
-<span class="c-key">strip_prefix</span>  = <span class="c-str">false</span>
-<span class="c-key">auth_required</span> = <span class="c-str">false</span>   <span class="c-comment"># set true for SentryAuth shield</span>
-<span class="c-key">timeout_ms</span>    = <span class="c-val">5000</span>
-<span class="c-key">rate_limit</span>    = <span class="c-val">60</span>
-
-<span class="c-comment"># Second service — demonstrates the Record structure</span>
+<span class="c-comment"># HTTP service</span>
 [<span class="c-key">services.api</span>]
 <span class="c-key">target</span>        = <span class="c-str">"http://localhost:8000"</span>
 <span class="c-key">strip_prefix</span>  = <span class="c-str">true</span>
-<span class="c-key">auth_required</span> = <span class="c-str">true</span></code></pre>
+<span class="c-key">auth_required</span> = <span class="c-str">false</span>
+<span class="c-key">timeout_ms</span>    = <span class="c-val">5000</span>
+<span class="c-key">rate_limit</span>    = <span class="c-val">60</span>
+
+<span class="c-comment"># WebSocket service — note ws_required flag</span>
+[<span class="c-key">services.chat</span>]
+<span class="c-key">target</span>        = <span class="c-str">"http://localhost:3000"</span>
+<span class="c-key">strip_prefix</span>  = <span class="c-str">true</span>
+<span class="c-key">auth_required</span> = <span class="c-str">false</span>
+<span class="c-key">ws_required</span>   = <span class="c-str">true</span>
+<span class="c-comment"># omit timeout_ms for WebSocket routes — defaults to 30s but never hits for WS</span></code></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>Start the gate</h3>
+          <p>Run SentryGate from the directory containing your <code style="display:inline;font-size:12px;color:var(--mint)">sentrygate.toml</code>.</p>
+          <div class="code-block">
+            <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+            <pre><code><span class="c-prompt">$</span> sentrygate start</code></pre>
           </div>
         </div>
       </div>
@@ -764,24 +652,289 @@
     </div>
   </section>
 
+  <!-- WEBSOCKET -->
+  <section id="websocket">
+    <p class="section-label">Real-time</p>
+    <h2>WebSocket support</h2>
+
+    <p class="body">SentryGate proxies WebSocket connections natively using Bun's <code style="display:inline;font-size:12px;color:var(--mint)">server.upgrade()</code>. When an upgrade header is detected, the route is resolved and the connection is handed off to Bun's WebSocket handler — bypassing the HTTP proxy path entirely.</p>
+
+    <div class="callout">
+      <span class="callout-icon">🛡️</span>
+      <span>WebSocket routes <strong>require</strong> the <code style="display:inline;font-size:12px;color:var(--mint)">ws_required = true</code> flag in your service config. Without it, upgrade requests fall through to the HTTP proxy path and fail. This flag is not shown in the basic docs — it is only visible in the source code.</span>
+    </div>
+
+    <h3 class="sub">How it works internally</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">flow</span></div>
+      <pre><code>Client WebSocket connect
+      │
+      ▼
+SentryGate detects "upgrade: websocket" header
+      │
+      ▼
+Resolves route → checks ws_required = true
+      │
+      ▼
+server.upgrade() — hands off to Bun WS handler
+      │
+      ▼
+Bun opens upstream WebSocket to target service
+      │
+      ├─ upstream → client  (onmessage relay)
+      └─ client → upstream  (message relay)
+
+Closing either side closes both.</code></pre>
+    </div>
+
+    <h3 class="sub">Service config for WebSocket</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">toml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><code>[<span class="c-key">services.chat</span>]
+<span class="c-key">target</span>        = <span class="c-str">"http://localhost:3000"</span>  <span class="c-comment"># http:// is converted to ws:// internally</span>
+<span class="c-key">strip_prefix</span>  = <span class="c-str">true</span>
+<span class="c-key">auth_required</span> = <span class="c-str">false</span>
+<span class="c-key">ws_required</span>   = <span class="c-str">true</span>                    <span class="c-comment"># required — enables WS upgrade path</span>
+<span class="c-comment"># do not set timeout_ms = 0, it will error. Omit the field entirely.</span></code></pre>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <span>Do not set <code style="display:inline;font-size:12px;color:var(--warn-text)">timeout_ms = 0</code> — the validator rejects it. For WebSocket routes, simply omit <code style="display:inline;font-size:12px;color:var(--warn-text)">timeout_ms</code> entirely. The timeout field has no effect on WebSocket connections anyway since upgrades bypass the HTTP fetch path.</span>
+    </div>
+  </section>
+
+  <!-- SSL -->
+  <section id="ssl">
+    <p class="section-label">Security</p>
+    <h2>TLS / SSL</h2>
+
+    <p class="body">SentryGate handles TLS natively via Bun's built-in TLS layer. Point it at your cert and key files and set <code style="display:inline;font-size:12px;color:var(--mint)">ssl_enabled = true</code>.</p>
+
+    <h3 class="sub">Config</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">toml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><code>[<span class="c-key">server</span>]
+<span class="c-key">port</span>        = <span class="c-val">443</span>
+<span class="c-key">name</span>        = <span class="c-str">"my-gateway"</span>
+<span class="c-key">ssl_enabled</span> = <span class="c-str">true</span>
+<span class="c-key">cert_path</span>   = <span class="c-str">"/etc/letsencrypt/live/yourdomain.com/fullchain.pem"</span>
+<span class="c-key">key_path</span>    = <span class="c-str">"/etc/letsencrypt/live/yourdomain.com/privkey.pem"</span></code></pre>
+    </div>
+
+    <h3 class="sub">Using Let's Encrypt (free)</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><code><span class="c-comment"># Install certbot and issue a cert for your domain</span>
+<span class="c-prompt">$</span> sudo apt install certbot -y
+<span class="c-prompt">$</span> sudo certbot certonly --standalone -d yourdomain.com
+
+<span class="c-comment"># Certs are placed at:</span>
+<span class="c-comment">#   /etc/letsencrypt/live/yourdomain.com/fullchain.pem  ← cert_path</span>
+<span class="c-comment">#   /etc/letsencrypt/live/yourdomain.com/privkey.pem    ← key_path</span>
+
+<span class="c-comment"># Check existing certs</span>
+<span class="c-prompt">$</span> sudo certbot certificates</code></pre>
+    </div>
+
+    <p class="body">Let's Encrypt certs expire every 90 days. Certbot installs a renewal cron job automatically. SentryGate reads the cert files on startup, so after renewal restart SentryGate to pick up the new cert.</p>
+
+    <div class="callout">
+      <span class="callout-icon">💡</span>
+      <span>If you were previously using Nginx with Let's Encrypt, your certs already exist on disk. Stop Nginx, point SentryGate at the same cert paths, and start SentryGate — no re-issuance needed.</span>
+    </div>
+  </section>
+
+  <!-- EXAMPLES -->
+  <section id="examples">
+    <p class="section-label">Integration</p>
+    <h2>Examples</h2>
+
+    <h3 class="sub">FastAPI (Python) + SentryGate</h3>
+    <p class="body">A minimal FastAPI app running on port 8000, fronted by SentryGate on port 80.</p>
+
+    <div class="tabs" id="fastapi-tabs">
+      <button class="tab-btn active" onclick="switchTab('fastapi-app', this, 'fastapi-tabs')">FastAPI app</button>
+      <button class="tab-btn" onclick="switchTab('fastapi-toml', this, 'fastapi-tabs')">sentrygate.toml</button>
+      <button class="tab-btn" onclick="switchTab('fastapi-run', this, 'fastapi-tabs')">Run</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-fastapi-app">
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="c-comment"># main.py</span>
+<span class="c-kw">from</span> fastapi <span class="c-kw">import</span> FastAPI
+
+app = FastAPI()
+
+@app.get(<span class="c-str">"/api/health"</span>)
+<span class="c-kw">async def</span> health():
+    <span class="c-kw">return</span> {<span class="c-str">"status"</span>: <span class="c-str">"ok"</span>}
+
+@app.get(<span class="c-str">"/api/users"</span>)
+<span class="c-kw">async def</span> users():
+    <span class="c-kw">return</span> [{<span class="c-str">"id"</span>: <span class="c-val">1</span>, <span class="c-str">"name"</span>: <span class="c-str">"Alice"</span>}]</code></pre>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-fastapi-toml">
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">toml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code>[<span class="c-key">base</span>]
+<span class="c-key">logging</span>            = <span class="c-str">true</span>
+<span class="c-key">default_rate_limit</span> = <span class="c-str">true</span>
+<span class="c-key">custom_rate_limit</span>  = <span class="c-str">false</span>
+
+[<span class="c-key">server</span>]
+<span class="c-key">port</span>        = <span class="c-val">80</span>
+<span class="c-key">name</span>        = <span class="c-str">"my-gateway"</span>
+<span class="c-key">ssl_enabled</span> = <span class="c-str">false</span>
+
+<span class="c-comment"># All /api/* requests proxied to FastAPI</span>
+[<span class="c-key">services.api</span>]
+<span class="c-key">target</span>        = <span class="c-str">"http://localhost:8000"</span>
+<span class="c-key">strip_prefix</span>  = <span class="c-str">true</span>
+<span class="c-key">auth_required</span> = <span class="c-str">false</span>
+<span class="c-key">timeout_ms</span>    = <span class="c-val">5000</span>
+<span class="c-key">rate_limit</span>    = <span class="c-val">60</span></code></pre>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-fastapi-run">
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="c-comment"># Terminal 1 — start FastAPI</span>
+<span class="c-prompt">$</span> uvicorn main:app --host 0.0.0.0 --port 8000
+
+<span class="c-comment"># Terminal 2 — start SentryGate</span>
+<span class="c-prompt">$</span> sentrygate start
+
+<span class="c-comment"># Traffic flow:</span>
+<span class="c-comment"># curl http://localhost/api/health</span>
+<span class="c-comment">#   → SentryGate (port 80)</span>
+<span class="c-comment">#   → FastAPI (port 8000)</span>
+<span class="c-comment">#   → { "status": "ok" }</span></code></pre>
+      </div>
+    </div>
+
+    <h3 class="sub">Mixed HTTP + WebSocket services</h3>
+    <p class="body">SentryGate handling a REST API alongside a WebSocket server on the same port.</p>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">toml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><code>[<span class="c-key">base</span>]
+<span class="c-key">logging</span>            = <span class="c-str">true</span>
+<span class="c-key">default_rate_limit</span> = <span class="c-str">true</span>
+<span class="c-key">custom_rate_limit</span>  = <span class="c-str">false</span>
+
+[<span class="c-key">server</span>]
+<span class="c-key">port</span>        = <span class="c-val">443</span>
+<span class="c-key">name</span>        = <span class="c-str">"my-gateway"</span>
+<span class="c-key">ssl_enabled</span> = <span class="c-str">true</span>
+<span class="c-key">cert_path</span>   = <span class="c-str">"/etc/letsencrypt/live/yourdomain.com/fullchain.pem"</span>
+<span class="c-key">key_path</span>    = <span class="c-str">"/etc/letsencrypt/live/yourdomain.com/privkey.pem"</span>
+
+<span class="c-comment"># REST API — Python/FastAPI on 8000</span>
+[<span class="c-key">services.api</span>]
+<span class="c-key">target</span>        = <span class="c-str">"http://localhost:8000"</span>
+<span class="c-key">strip_prefix</span>  = <span class="c-str">true</span>
+<span class="c-key">auth_required</span> = <span class="c-str">false</span>
+<span class="c-key">timeout_ms</span>    = <span class="c-val">5000</span>
+
+<span class="c-comment"># WebSocket server — Bun/Node on 3000</span>
+[<span class="c-key">services.chat</span>]
+<span class="c-key">target</span>        = <span class="c-str">"http://localhost:3000"</span>
+<span class="c-key">strip_prefix</span>  = <span class="c-str">true</span>
+<span class="c-key">auth_required</span> = <span class="c-str">false</span>
+<span class="c-key">ws_required</span>   = <span class="c-str">true</span></code></pre>
+    </div>
+  </section>
+
+  <!-- BACKGROUND -->
+  <section id="background">
+    <p class="section-label">Production</p>
+    <h2>Running in the background (Linux)</h2>
+
+    <p class="body">On a Linux server, use <code style="display:inline;font-size:12px;color:var(--mint)">nohup</code> to keep SentryGate running after you close your SSH session.</p>
+
+    <h3 class="sub">Start in background</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><code><span class="c-comment"># Run in background, pipe logs to file</span>
+<span class="c-prompt">$</span> nohup sentrygate start &> /var/log/sentrygate.log &
+
+<span class="c-comment"># Note the printed PID — save it if you need to stop later</span>
+<span class="c-comment"># [1] 3542027  ← job number and PID</span></code></pre>
+    </div>
+
+    <h3 class="sub">Manage the process</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><code><span class="c-comment"># Check it's running</span>
+<span class="c-prompt">$</span> ps aux | grep sentrygate
+
+<span class="c-comment"># View live logs</span>
+<span class="c-prompt">$</span> tail -f /var/log/sentrygate.log
+
+<span class="c-comment"># List background jobs in current shell</span>
+<span class="c-prompt">$</span> jobs
+
+<span class="c-comment"># Stop SentryGate</span>
+<span class="c-prompt">$</span> pkill sentrygate
+
+<span class="c-comment"># Or stop a specific job number</span>
+<span class="c-prompt">$</span> kill %1</code></pre>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠</span>
+      <span>The <code style="display:inline;font-size:12px;color:var(--warn-text)">[2]</code> job number printed by the shell means it's the second background job in your session. If you have a stale previous instance running, kill job <code style="display:inline;font-size:12px;color:var(--warn-text)">%1</code> to avoid two processes competing on the same port.</span>
+    </div>
+
+    <h3 class="sub">Verify the gateway is live</h3>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+      <pre><code><span class="c-prompt">$</span> curl https://yourdomain.com/sentry-status</code></pre>
+    </div>
+  </section>
+
   <!-- BUILD FROM SOURCE -->
   <section id="source">
     <p class="section-label">Development</p>
     <h2>Build from source</h2>
-    <p style="color:var(--text-muted);font-size:14px;margin-bottom:1.5rem;">Prefer compiling the TypeScript source yourself? Bun required.</p>
-    <div class="code-block">
-      <div class="code-block-header">
-        <span class="code-lang">bash</span>
-        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    <p class="body">Bun supports cross-compilation targets. You can build a Linux binary from Windows or macOS using the <code style="display:inline;font-size:12px;color:var(--mint)">--target</code> flag.</p>
+
+    <div class="tabs" id="build-tabs">
+      <button class="tab-btn active" onclick="switchTab('build-linux', this, 'build-tabs')">For Linux</button>
+      <button class="tab-btn" onclick="switchTab('build-native', this, 'build-tabs')">Native (current OS)</button>
+      <button class="tab-btn" onclick="switchTab('build-dev', this, 'build-tabs')">Dev mode</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-build-linux">
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="c-comment"># Cross-compile for Linux from any OS (Windows, macOS)</span>
+<span class="c-prompt">$</span> bun build --compile --target=bun-linux-x64 ./src/index.ts --outfile sentrygateLinux
+
+<span class="c-comment"># Output: sentrygateLinux — ELF 64-bit, runs on Linux x64</span></code></pre>
       </div>
-      <pre><code><span class="c-comment"># Install dependencies</span>
+    </div>
+
+    <div class="tab-panel" id="tab-build-native">
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="c-comment"># Compile for the OS you are currently running on</span>
 <span class="c-prompt">$</span> bun install
-
-<span class="c-comment"># Development mode</span>
-<span class="c-prompt">$</span> bun run src/index.ts
-
-<span class="c-comment"># Compile your own binary</span>
 <span class="c-prompt">$</span> bun build ./src/index.ts --compile --outfile sentrygate</code></pre>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-build-dev">
+      <div class="code-block">
+        <div class="code-block-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><code><span class="c-comment"># Run from source without compiling</span>
+<span class="c-prompt">$</span> bun install
+<span class="c-prompt">$</span> bun run src/index.ts start</code></pre>
+      </div>
     </div>
   </section>
 
@@ -789,10 +942,23 @@
   <section>
     <p class="section-label">Observability</p>
     <h2>Monitoring</h2>
-    <p style="color:var(--text-muted);font-size:14px;margin-bottom:1rem;">SentryGate ships with a built-in health check and status reporter. Access it at:</p>
+    <p class="body">SentryGate ships with a built-in health check and status endpoint. It returns the gateway name, status, and total requests handled.</p>
     <div class="status-endpoint">
       <div class="status-dot"></div>
-      http://localhost/sentry-status
+      https://yourdomain.com/sentry-status
+    </div>
+    <br/>
+    <p class="body">Logs are written to <code style="display:inline;font-size:12px;color:var(--mint)">sentrygate.log</code> in structured JSON format, one line per request:</p>
+    <div class="code-block">
+      <div class="code-block-header"><span class="code-lang">json</span></div>
+      <pre><code>{
+  <span class="c-key">"timestamp"</span>: <span class="c-str">"2026-04-18T12:00:00.000Z"</span>,
+  <span class="c-key">"id"</span>:        <span class="c-str">"019123ab-..."</span>,
+  <span class="c-key">"method"</span>:    <span class="c-str">"GET"</span>,
+  <span class="c-key">"path"</span>:      <span class="c-str">"/api/users"</span>,
+  <span class="c-key">"status"</span>:    <span class="c-val">200</span>,
+  <span class="c-key">"duration"</span>:  <span class="c-str">"12.34ms"</span>
+}</code></pre>
     </div>
   </section>
 
@@ -802,9 +968,17 @@
     <h2>Project structure</h2>
     <div class="tree">
       <div><span class="tree-dir">src/</span></div>
-      <div>├── <span class="tree-dir">core/</span>        <span class="tree-comment">— Engine and routing</span></div>
-      <div>├── <span class="tree-dir">middleware/</span>  <span class="tree-comment">— Auth, rate limiting, logging</span></div>
-      <div>└── <span class="tree-dir">utils/</span>       <span class="tree-comment">— Config loader, header masking</span></div>
+      <div>├── <span class="tree-dir">core/</span></div>
+      <div>│   ├── engine.core.ts     <span class="tree-comment">— Server bootstrap, request lifecycle, WebSocket handling</span></div>
+      <div>│   ├── router.core.ts     <span class="tree-comment">— Resolves URL pathnames to upstream service targets</span></div>
+      <div>│   └── types.core.ts      <span class="tree-comment">— SentryGateConfig, ServerConfig, BaseConfig, Service interfaces</span></div>
+      <div>├── <span class="tree-dir">middleware/</span></div>
+      <div>│   ├── auth.middleware.ts  <span class="tree-comment">— Bearer token validation</span></div>
+      <div>│   ├── logger.middleware.ts<span class="tree-comment">— Structured console + file logging</span></div>
+      <div>│   └── rlimits.middleware.ts<span class="tree-comment">— LRUBucketMap + token bucket rate limiter</span></div>
+      <div>└── <span class="tree-dir">utils/</span></div>
+      <div>    ├── header-tool.utils.ts<span class="tree-comment">— Header masking and gateway identity injection</span></div>
+      <div>    └── loader.utils.ts    <span class="tree-comment">— TOML config file loader</span></div>
     </div>
   </section>
 
@@ -817,11 +991,22 @@
 </div>
 
 <script>
-  function switchTab(os) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('tab-' + os).classList.add('active');
-    event.target.classList.add('active');
+  function switchTab(id, btn, groupId) {
+    const group = document.getElementById(groupId);
+    group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll(`#tab-${id}`).forEach(p => p.classList.remove('active'));
+
+    // Find all panels that belong to this group by checking siblings of the tabs container
+    const tabsEl = group;
+    let el = tabsEl.nextElementSibling;
+    while (el && el.classList.contains('tab-panel')) {
+      el.classList.remove('active');
+      el = el.nextElementSibling;
+    }
+
+    btn.classList.add('active');
+    const panel = document.getElementById('tab-' + id);
+    if (panel) panel.classList.add('active');
   }
 
   function copyCode(btn) {

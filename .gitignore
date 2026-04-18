@@ -35,3 +35,4 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 command.md
 sentrygate
 sentrygate.exe
+git push origin main --force
